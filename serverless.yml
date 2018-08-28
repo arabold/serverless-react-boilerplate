@@ -1,0 +1,114 @@
+---
+service: serverless-react-boilerplate
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: us-east-1
+  stage: dev
+  memorySize: 512
+  timeout: 6
+  logRetentionInDays: 7
+
+  environment:
+    SERVERLESS_PROJECT: ${self:service}
+    SERVERLESS_REGION: ${self:custom.region}
+    SERVERLESS_STAGE: ${self:custom.stage}
+
+    APP_DIST_URL:
+      Fn::Join:
+        - ''
+        - - https://s3.amazonaws.com/
+          - Ref: DistBucket
+    APP_PUBLIC_URL:
+      Fn::Join:
+        - ''
+        - - https://s3.amazonaws.com/
+          - Ref: DistBucket
+    APIGATEWAY_URL:
+      Fn::Join:
+        - ''
+        - - https://
+          - Ref: ApiGatewayRestApi
+          - .execute-api.
+          - Ref: AWS::Region
+          - .amazonaws.com/
+          - ${self:custom.stage}
+
+plugins:
+  - serverless-webpack
+  - serverless-export-env
+  - serverless-plugin-scripts
+  - serverless-offline
+  - serverless-s3-deploy
+
+functions:
+  serve:
+    # Any web request regardless of path or method will be handled by a single Lambda function
+    handler: handler.serve
+    events:
+      - http:
+          path: /
+          method: any
+          cors: true
+      - http:
+          path: /{any+}
+          method: any
+          cors: true
+
+custom:
+  region: ${opt:region, self:provider.region}
+  stage: ${opt:stage, self:provider.stage}
+
+  scripts:
+    hooks:
+      # Build the client-side script before packaging backend code
+      package:initialize: 'npm run build:client'
+
+  webpack:
+    webpackConfig: 'webpack.server.config.js'
+    includeModules: true
+
+  assets:
+    # Automatically copy public folder and distribution to S3
+    auto: true
+    targets:
+      - bucket: 
+          Ref: DistBucket
+        acl: public-read
+        files:
+          - source: public/
+            globs:
+              - '**/*'
+          - source: dist/
+            headers:
+              CacheControl: max-age=31104000 # 1 year
+            globs:
+              - '**/*.js'
+              - '**/*.css'
+              - '**/*.map'
+
+resources:
+  Resources:
+
+    # Customize the API Gateway resource
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        # Enable gzip compression
+        MinimumCompressionSize: 1000
+
+    # S3 Bucket for the distribution bundles
+    DistBucket:
+      Type: AWS::S3::Bucket
+      DeletionPolicy: Delete
+
+  Outputs:
+    ApiGatewayRestApi:
+      Description: API Gateway Endpoint
+      Value:
+        Ref: ApiGatewayRestApi
+    DistBucket:
+      Description: Distribution S3 Bucket
+      Value:
+        Ref: DistBucket

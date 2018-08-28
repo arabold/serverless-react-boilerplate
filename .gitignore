@@ -1,0 +1,14 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+.env
+
+# Webpack and distribution directories
+.webpack
+dist
+
+# Other
+.DS_Store
