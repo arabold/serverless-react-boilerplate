@@ -28,6 +28,12 @@ export const config = {
     /** Where the contents of the `public` folder are hosted (might be the same as `config.app.DIST_URL`) */
     PUBLIC_URL: isLocal ? 'http://localhost:8080' : process.env.APP_PUBLIC_URL,
   },
+  cognito: {
+    REGION: process.env.SERVERLESS_REGION,
+    USER_POOL_ID: process.env.COGNITO_USER_POOL_ID,
+    USER_POOL_CLIENT_ID: process.env.COGNITO_USER_POOL_CLIENT_ID,
+    IDENTITY_POOL_ID: process.env.COGNITO_IDENTITY_POOL_ID,
+  }
 };
 
 export default config;

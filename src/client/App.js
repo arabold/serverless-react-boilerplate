@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { withAuthenticator } from 'aws-amplify-react';
+
 import logo from './logo.svg';
 import { ConfigConsumer } from '../components/ConfigProvider';
 import './App.css';
@@ -23,4 +25,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withAuthenticator(App);
