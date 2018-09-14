@@ -8,6 +8,8 @@ const isDebug = !!process.env.IS_OFFLINE;
 
 module.exports = {
   entry: './src/client/index.js',
+  target: 'web',
+  mode: isDebug ? 'development': 'production',
   devServer: {
     contentBase: path.join(__dirname, 'public'),
   },
@@ -34,11 +36,12 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
+        exclude: /node_modules/, // we shouldn't need processing `node_modules`
         use: [
           {
             loader: 'babel-loader',
             options: {
+              // Don't use .babelrc here but web browser optimized settings
               presets: [
                 [ '@babel/preset-env', {
                   targets: { browsers: [ 'last 2 versions' ] },
@@ -52,28 +55,16 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              // publicPath: '../',
-            }
+            loader: MiniCssExtractPlugin.loader
           },
           'css-loader'
         ]
       },
       {
-        test: /\.(gif|jpg|jpeg|svg)$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192
-            }
-          }
-        ]
+        test: /\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$/,
+        use: 'url-loader',
       }
     ]
   },
@@ -81,4 +72,4 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: isDebug ? 'index.js' : 'index.[contenthash:8].js',
   },
-};
+}
