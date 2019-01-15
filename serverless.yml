@@ -69,13 +69,14 @@ custom:
     hooks:
       # Build the client-side script before packaging backend code
       package:initialize: 'npm run build:client'
+      deploy:finalize: 'npx sls s3deploy'
 
   webpack:
     webpackConfig: 'webpack.server.config.js'
 
   assets:
-    # Automatically copy public folder and distribution to S3
-    auto: true
+    # Automatically copying public folder and distribution to S3 stopped working; we do it manually now
+    auto: false
     targets:
       - bucket: 
           Ref: DistBucket
