@@ -102,6 +102,22 @@ resources:
     DistBucket:
       Type: AWS::S3::Bucket
       DeletionPolicy: Delete
+      Properties:
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders:
+                - "*"
+              AllowedMethods: 
+                - "GET"
+              AllowedOrigins:
+                - Fn::Join:
+                    - ''
+                    - - https://
+                      - Ref: ApiGatewayRestApi
+                      - .execute-api.
+                      - Ref: AWS::Region
+                      - .amazonaws.com
+              MaxAge: 3000
 
   Outputs:
     ApiGatewayRestApi:
