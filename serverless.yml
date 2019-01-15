@@ -15,20 +15,8 @@ provider:
     SERVERLESS_REGION: ${self:provider.region}
     SERVERLESS_STAGE: ${self:provider.stage}
 
-    APP_DIST_URL:
-      Fn::Join:
-        - ''
-        - - https://s3-
-          - Ref: AWS::Region
-          - .amazonaws.com/
-          - Ref: DistBucket
-    APP_PUBLIC_URL:
-      Fn::Join:
-        - ''
-        - - https://s3-
-          - Ref: AWS::Region
-          - .amazonaws.com/
-          - Ref: DistBucket
+    APP_DIST_URL: ${self:custom.distBucketUrl.${self:provider.region}, self:custom.distBucketUrl.default}
+    APP_PUBLIC_URL: ${self:custom.distBucketUrl.${self:provider.region}, self:custom.distBucketUrl.default}
     APIGATEWAY_URL:
       Fn::Join:
         - ''
@@ -61,6 +49,22 @@ functions:
           cors: true
 
 custom:
+  distBucketUrl:
+    us-east-1:
+      # us-east-1 uses a different URL format than the other regions
+      Fn::Join:
+        - ''
+        - - https://s3.amazonaws.com/
+          - Ref: DistBucket
+    default:
+      # All other regions
+      Fn::Join:
+        - ''
+        - - https://s3-
+          - Ref: AWS::Region
+          - .amazonaws.com/
+          - Ref: DistBucket
+
   scripts:
     hooks:
       # Build the client-side script before packaging backend code
