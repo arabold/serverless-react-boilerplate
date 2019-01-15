@@ -18,12 +18,16 @@ provider:
     APP_DIST_URL:
       Fn::Join:
         - ''
-        - - https://s3.amazonaws.com/
+        - - https://s3-
+          - Ref: AWS::Region
+          - .amazonaws.com/
           - Ref: DistBucket
     APP_PUBLIC_URL:
       Fn::Join:
         - ''
-        - - https://s3.amazonaws.com/
+        - - https://s3-
+          - Ref: AWS::Region
+          - .amazonaws.com/
           - Ref: DistBucket
     APIGATEWAY_URL:
       Fn::Join:
