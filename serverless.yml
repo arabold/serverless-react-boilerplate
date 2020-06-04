@@ -3,7 +3,7 @@ service: serverless-react-boilerplate
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   region: ${opt:region, 'us-east-1'}
   stage: ${opt:stage, 'dev'}
   memorySize: 512
@@ -19,7 +19,7 @@ provider:
     APP_PUBLIC_URL: ${self:custom.distBucketUrl.${self:provider.region}, self:custom.distBucketUrl.default}
     APIGATEWAY_URL:
       Fn::Join:
-        - ''
+        - ""
         - - https://
           - Ref: ApiGatewayRestApi
           - .execute-api.
@@ -53,13 +53,13 @@ custom:
     us-east-1:
       # us-east-1 uses a different URL format than the other regions
       Fn::Join:
-        - ''
+        - ""
         - - https://s3.amazonaws.com/
           - Ref: DistBucket
     default:
       # All other regions
       Fn::Join:
-        - ''
+        - ""
         - - https://s3-
           - Ref: AWS::Region
           - .amazonaws.com/
@@ -68,34 +68,33 @@ custom:
   scripts:
     hooks:
       # Build the client-side script before packaging backend code
-      package:initialize: 'npm run build:client'
-      deploy:finalize: 'npx sls s3deploy'
+      package:initialize: "npm run build:client"
+      deploy:finalize: "npx sls s3deploy"
 
   webpack:
-    webpackConfig: 'webpack.server.config.js'
+    webpackConfig: "webpack.server.config.js"
 
   assets:
     # Automatically copying public folder and distribution to S3 stopped working; we do it manually now
     auto: false
     targets:
-      - bucket: 
+      - bucket:
           Ref: DistBucket
         acl: public-read
         files:
           - source: public/
             globs:
-              - '**/*'
+              - "**/*"
           - source: dist/
             headers:
               CacheControl: max-age=31104000 # 1 year
             globs:
-              - '**/*.js'
-              - '**/*.css'
-              - '**/*.map'
+              - "**/*.js"
+              - "**/*.css"
+              - "**/*.map"
 
 resources:
   Resources:
-
     # Customize the API Gateway resource
     ApiGatewayRestApi:
       Type: AWS::ApiGateway::RestApi
@@ -112,11 +111,11 @@ resources:
           CorsRules:
             - AllowedHeaders:
                 - "*"
-              AllowedMethods: 
+              AllowedMethods:
                 - "GET"
               AllowedOrigins:
                 - Fn::Join:
-                    - ''
+                    - ""
                     - - https://
                       - Ref: ApiGatewayRestApi
                       - .execute-api.

@@ -1,7 +1,8 @@
 {
   "presets": [
     [
-      "@babel/preset-env", {
+      "@babel/preset-env",
+      {
         "targets": {
           "node": "8.10"
         }
@@ -9,12 +10,10 @@
     ],
     "@babel/preset-react"
   ],
-  "plugins": [
-  ],
+  "plugins": [],
   "env": {
     "test": {
-      "plugins": [
-      ]
+      "plugins": []
     }
   }
 }
