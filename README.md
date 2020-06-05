@@ -10,10 +10,18 @@ Lightweight boilerplate project to setup a React 16 web application on AWS Lambd
 - Universal app; server-side rendering with dynamic configuration context passed from backend to browser.
 - Self-contained; no additional setup steps necessary other than running `npx sls deploy`.
 - Lightweight; no mandatory `redux`, `react-router`, `sass`, `less` or any other 3rd party dependency for full flexibility.
-- Full ES6/7 support using Babel 7 and Webpack 4.
+- Full ES6/7/8 with latest JavaScript features supported using Babel 7 and Webpack 4.
 - Working [Jest](https://jestjs.io/) test environment.
 
 ## Overview
+
+### How Does It Work?
+
+The idea is that we use AWS Lambda to serve the dynamic part of our app, the server-side logic, and perform the server-side rendering. For all static data like images, stylesheets and even the app's `index.js` that is loaded in the browser, we use an S3 bucket for public hosting.
+
+This combination makes our app fast and incredibly scalable. AWS will spin up new Lambda instances once your number of users increases, handling even the largest spikes fully automatically, while incurring virtually no costs when your app isn't used. At the same time S3 provides a robust and fast platform for your static content so you don't have to waste your own computing resources.
+
+All resources, including the S3 bucket for hosting static content, are created and configured automatically when your app is deployed the first time. You can make changes to the default setup by updating your `serverless.yml` to your linking.
 
 ### Folder Structure
 
@@ -51,7 +59,7 @@ The project is based on the [Serverless Framework](https://serverless.com) and m
 
 Though we use the same source code for both the server-side and client-side rendering, the project will be packaged into two distinct bundles:
 
-1. Backend code running on AWS Lambda. The main entry point is `./src/server/index.js`. The packaging is controlled by `webpack.server.config.js` and optimized for Node.js 8.10.
+1. Backend code running on AWS Lambda. The main entry point is `./src/server/index.js`. The packaging is controlled by `webpack.server.config.js` and optimized for Node.js 12.
 2. Frontend code hosted in an S3 bucket and loaded by the browser. Main entry point is `./src/browser/index.js`. It's packaged using the `webpack.browser.config.js`, optimized for web browsers. The output files will have their content hash added to their names to enable long term caching in the browser.
 
 ## Customization
@@ -62,7 +70,7 @@ Update the `serverless.yaml` with your project name and additional resources you
 
 ### Configuration
 
-The frontend as well as the server-side code running on AWS Lambda share a common application configuration. Currently it is used for injecting the application name from the `public/manifest.json` as well as setting the public host name. You can extend the configuration by adding your own variables to `src/server/config.js`. They will become available in both your backend and frontend code via the `useConfig` hook:
+The frontend as well as the server-side code running on AWS Lambda share a common application configuration. Currently it is used for injecting the application name from the `public/manifest.json` as well as setting the public host names. You can extend the configuration by adding your own variables to `src/server/config.js`. They will become available in both your backend and frontend code via the `useConfig` hook:
 
 ```js
 import useConfig from "../components/useConfig";
@@ -81,7 +89,7 @@ I would recommend to create a separate Serverless service that provides the fron
 
 ### Redux, React-Router, etc.
 
-The goal of this boilerplate is to offer a minimal setup that can be used as a basis for pretty much all your React needs. A lot of people love Redux, rely on React-Router or need other external modules. I have intentionally left these out of the boilerplate code but it should be trivial to add them, following the standard documentation steps.
+The goal of this boilerplate is to offer a minimal setup that can be used as a basis for pretty much all your React needs. A lot of people love [Redux](https://redux.js.org/), rely on [React-Router](https://reacttraining.com/react-router/) or need other external modules. I have intentionally left these out of the boilerplate code but it should be trivial to add them, following the standard documentation steps.
 
 ### Sass, Styled Components, etc.
 
@@ -89,7 +97,7 @@ Similar to the statement above, I have decided against integrating with a specif
 
 ### Flow and Typescript
 
-Personally I love Flow and code all of my project in TypeScript, but have decided against using it in this project for now. There's not much JavaScript code in here anyway so you can use in your own project whatever you prefer.
+Personally I love Flow and code all of my new project in TypeScript, but have decided against using it in this project for now. There's not much JavaScript code in here anyway so you can use in your own project whatever you prefer.
 
 ## Testing
 

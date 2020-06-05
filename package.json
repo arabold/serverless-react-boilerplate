@@ -6,8 +6,8 @@
     "start": "cross-env IS_OFFLINE=1 concurrently --kill-others \"npm run start:devserver\" \"npm run start:offline\"",
     "start:devserver": "webpack-dev-server --config webpack.browser.config.js --mode development",
     "start:offline": "sls offline start",
-    "build": "sls package",
-    "build:client": "webpack --config webpack.browser.config.js --mode production",
+    "build:serverless": "sls package",
+    "build:browser": "webpack --config webpack.browser.config.js --mode production",
     "deploy": "sls deploy",
     "test": "jest"
   },
