@@ -56,10 +56,12 @@ The project is based on the [Serverless Framework](https://serverless.com) and m
 - [Webpack Plugin](https://github.com/serverless-heaven/serverless-webpack) - We use Webpack for packaging our sources.
 - [Offline Plugin](https://github.com/dherault/serverless-offline) - The Serverless Offline Plugin allows you to run Serverless applications locally as if they would be deployed on AWS. This is especially helpful for testing web applications and APIs without having to deploy them anywhere.
 - [Export Env Plugin](https://github.com/arabold/serverless-export-env) - The Export Env Plugin reads our AW setup and automatically injects all dynamic values as environment variables in our code.
+- [Scripts Plugin](https://github.com/mvila/serverless-plugin-scripts#readme) - Run shell scripts as part of your Serverless workflow
+- [S3 Deploy Plugin](https://github.com/funkybob/serverless-s3-deploy) - Deploy files to S3 buckets. This is used for uploading static content like images and the generated `index.js`.
 
 ### Webpack
 
-Though we use the same source code for both the server-side and client-side rendering, the project will be packaged into two distinct bundles:
+Though we use the same source code for both the server-side and browser rendering, the project will be packaged into two distinct bundles:
 
 1. Backend code running on AWS Lambda. The main entry point is `./src/server/index.jsx`. The packaging is controlled by `webpack.server.config.js` and optimized for Node.js 12.
 2. Frontend code hosted in an S3 bucket and loaded by the browser. Main entry point is `./src/browser/index.jsx`. It's packaged using the `webpack.browser.config.js`, optimized for web browsers. The output files will have their content hash added to their names to enable long term caching in the browser.
