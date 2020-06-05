@@ -68,7 +68,7 @@ custom:
   scripts:
     hooks:
       # Build the client-side script before packaging backend code
-      package:initialize: "npm run build:client"
+      package:initialize: "npm run build:browser"
       deploy:finalize: "npx sls s3deploy"
 
   webpack:
