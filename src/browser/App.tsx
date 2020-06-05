@@ -1,8 +1,9 @@
+import "./App.css";
+
 import React from "react";
 
 import useConfig from "../components/useConfig";
 import logo from "./logo.svg";
-import "./App.css";
 
 export default function App() {
   const config = useConfig();

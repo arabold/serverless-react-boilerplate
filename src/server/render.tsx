@@ -4,8 +4,8 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
 
-import ConfigContext from "../components/ConfigContext";
 import App from "../browser/App";
+import ConfigContext from "../components/ConfigContext";
 import config from "./config";
 import html from "./html";
 import { Stats } from "./types";
