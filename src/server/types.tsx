@@ -1,4 +1,3 @@
-
 export type Stats = {
   /** CSS file name */
   css: string;

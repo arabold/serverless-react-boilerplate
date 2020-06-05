@@ -17,7 +17,7 @@ export default async function render(): Promise<string> {
   let stats: Stats = { main: "index.js", css: "index.css" };
   if (!isLocal) {
     try {
-      stats = require("../../dist/stats.json");
+      stats = require("../../dist/stats.json") as Stats;
     } catch (err) {
       throw new Error("`stats.json` not found");
     }

@@ -6,7 +6,7 @@ import { Stats } from "./types";
  * application code into before sending it to the client as regular HTML.
  * Note we're returning a template string from this function.
  */
-const html = ({ stats, content, config }: { stats: Stats; content: string; config: Config }) => `<!DOCTYPE html>
+const html = ({ stats, content, config }: { stats: Stats; content: string; config: Config }): string => `<!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="utf-8" />

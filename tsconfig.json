@@ -11,5 +11,6 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "resolveJsonModule": true
-  }
+  },
+  "exclude": ["node_modules", "dist", ".webpack", ".serverless"]
 }
