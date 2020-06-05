@@ -9,8 +9,8 @@ import App from "./App";
 
 import "./index.css";
 
-const config = window.__CONFIG__;
-delete window.__CONFIG__;
+const config = (window as any).__CONFIG__;
+delete (window as any).__CONFIG__;
 
 hydrate(
   <ConfigContext.Provider value={config}>

@@ -1,9 +1,12 @@
+import { Config } from "./config";
+import { Stats } from "./types";
+
 /**
  * This HTML file acts as a template that we insert all our generated
  * application code into before sending it to the client as regular HTML.
  * Note we're returning a template string from this function.
  */
-const html = ({ stats, content, config }) => `<!DOCTYPE html>
+const html = ({ stats, content, config }: { stats: Stats; content: string; config: Config }) => `<!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="utf-8" />

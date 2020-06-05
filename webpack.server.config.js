@@ -19,7 +19,23 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/, // we shouldn't need processing `node_modules`
-        use: "babel-loader",
+        use: [
+          {
+            loader: "babel-loader",
+          },
+        ],
+      },
+      {
+        test: /\.ts(x?)$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "babel-loader",
+          },
+          {
+            loader: "ts-loader",
+          },
+        ],
       },
       {
         test: /\.css$/,
@@ -32,7 +48,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   output: {
     libraryTarget: "commonjs2",

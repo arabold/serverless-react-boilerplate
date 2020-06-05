@@ -8,12 +8,13 @@ import ConfigContext from "../components/ConfigContext";
 import App from "../browser/App";
 import config from "./config";
 import html from "./html";
+import { Stats } from "./types";
 
 /** Whether we're running on a local desktop or on AWS Lambda */
 const isLocal = process.env.IS_LOCAL || process.env.IS_OFFLINE;
 
-export default async function render() {
-  let stats = { main: "index.js", css: "index.css" };
+export default async function render(): Promise<string> {
+  let stats: Stats = { main: "index.js", css: "index.css" };
   if (!isLocal) {
     try {
       stats = require("../../dist/stats.json");

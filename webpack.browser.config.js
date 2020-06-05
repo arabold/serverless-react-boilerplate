@@ -5,9 +5,24 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const isOffline = !!process.env.IS_OFFLINE;
 
+const babelOptions = {
+  // Don't use .babelrc here but web browser optimized settings
+  presets: [
+    [
+      "@babel/preset-env",
+      {
+        targets: { browsers: ["last 2 versions"] },
+        // debug: isOffline,
+      },
+    ],
+    "@babel/preset-typescript",
+    "@babel/preset-react",
+  ],
+};
+
 module.exports = {
   entry: {
-    main: path.join(__dirname, "src/browser/index.jsx"),
+    main: path.join(__dirname, "src/browser/index.tsx"),
   },
   target: "web",
   mode: isOffline ? "development" : "production",
@@ -54,19 +69,20 @@ module.exports = {
         use: [
           {
             loader: "babel-loader",
-            options: {
-              // Don't use .babelrc here but web browser optimized settings
-              presets: [
-                [
-                  "@babel/preset-env",
-                  {
-                    targets: { browsers: ["last 2 versions"] },
-                    // debug: isOffline,
-                  },
-                ],
-                "@babel/preset-react",
-              ],
-            },
+            options: babelOptions,
+          },
+        ],
+      },
+      {
+        test: /\.ts(x?)$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "babel-loader",
+            options: babelOptions,
+          },
+          {
+            loader: "ts-loader",
           },
         ],
       },
@@ -86,7 +102,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   output: {
     path: path.join(__dirname, "dist"),
