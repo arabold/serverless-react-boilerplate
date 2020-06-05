@@ -55,8 +55,6 @@ module.exports = {
           null,
           2,
         );
-        console.log("ASSETS =>", assets);
-        console.log("STATS =>", stats);
         return stats;
       },
     }),

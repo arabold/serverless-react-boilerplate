@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
     "target": "es6",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
@@ -11,6 +12,5 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "resolveJsonModule": true
-  },
-  "exclude": ["node_modules", "dist", ".webpack", ".serverless"]
+  }
 }

@@ -103,6 +103,115 @@ Similar to the statement above, I have decided against integrating with a specif
 
 This project constist of very little JavaScript and porting it to Flow or TypeScript is relatively straight forward. However, as pretty much all my own projects are written in TypeScript I'm providing a separate [TypeScript branch](https://github.com/arabold/serverless-react-boilerplate/tree/typescript). It contains everything necessary to run a TypeScript based React application.
 
+### Code Formatting & Adding ESLint
+
+To keep this repository lightweight no ESLint rules are included. There are many different plugins and people tend to prefer different coding styles. The existing code should be easily adaptable to any style you personally prefer. I recommend using [Prettier](https://prettier.io/) to format your code automatically and a default configuration is already part of this repo, defined in `package.json`. In addition, I recommend adding [ESLint](https://eslint.org/) and [Husky](https://github.com/typicode/husky) to your project to ensure your coding guidelines are followed.
+
+To add ESLint with my preferred settings, follow this steps:
+
+Install ESLint and Husky, as well as some additional Prettier dependencies:
+
+```sh
+npm install --save-dev eslint-plugin-react-hooks eslint eslint-plugin-filenames eslint-plugin-prettier eslint-plugin-promise eslint-plugin-react husky import-sort-style-module lint-staged prettier-plugin-import-sort prettier-plugin-package
+```
+
+Update your `package.json` and add the following sections somewhere at the end. Husky will automatically compile and lint your changes before every new commit to ensure all new files adhere to the defined standard.
+
+```json
+/* package.json */
+{
+  ...
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsc --noEmit && lint-staged"
+    }
+  },
+  "importSort": {
+    ".js, .jsx, .ts, .tsx": {
+      "style": "module",
+      "parser": "typescript"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": ["npx prettier --write", "eslint --fix"]
+  }
+}
+```
+
+Create a new `.eslintrc.yml` file in your project root folder and add the following content. Adjust the rules to your linking:
+
+```yml
+# .eslintrc.yml
+env:
+  node: true
+  browser: true
+  jest: true
+plugins:
+  - "@typescript-eslint"
+  - filenames
+  - prettier
+  - promise
+  - react
+  - react-hooks
+extends:
+  - eslint:recommended
+  - plugin:react/recommended
+  - plugin:promise/recommended
+  - plugin:@typescript-eslint/eslint-recommended
+  - plugin:@typescript-eslint/recommended
+  - plugin:@typescript-eslint/recommended-requiring-type-checking
+parser: "@typescript-eslint/parser"
+parserOptions:
+  project: ./tsconfig.json
+settings:
+  react:
+    version: detect
+rules:
+  "@typescript-eslint/ban-types": 0 # to allow "{}" as a type
+  "@typescript-eslint/camelcase": 0 #deprecated
+  "@typescript-eslint/explicit-function-return-type": 0 # allow implicit return types
+  "@typescript-eslint/explicit-module-boundary-types": 0
+  "@typescript-eslint/interface-name-prefix": 0 # interfaces prefixed with "I" are perfectly fine
+  "@typescript-eslint/no-empty-function": 0
+  "@typescript-eslint/no-explicit-any": 0
+  "@typescript-eslint/no-floating-promises": error
+  "@typescript-eslint/no-inferrable-types": 0
+  "@typescript-eslint/no-unused-vars": [error, { vars: all, ignoreRestSiblings: true }]
+  "@typescript-eslint/no-useless-constructor": error
+  "@typescript-eslint/no-var-requires": 0 # allow `require()`
+  "@typescript-eslint/require-await": 0
+  filenames/match-regex: 0
+  filenames/match-exported: error
+  filenames/no-index: 0
+  import/order: 0 # we use prettier import sorting by module
+  no-console: 0
+  no-restricted-imports:
+    - error
+    - paths:
+        - name: moment
+          message: Use date-fns instead!
+        - name: bluebird
+          message: Use native Promises and async/await instead!
+  no-unused-expressions: 0 # use @typescript-eslint/no-unused-expressions instead
+  no-unused-vars: 0 # use @typescript-eslint/no-unused-vars instead
+  no-useless-constructor: 0 # use @typescript-eslint/no-useless-constructor instead
+  prettier/prettier: error
+  react-hooks/exhaustive-deps: error
+  react-hooks/rules-of-hooks: error
+overrides:
+  - files: ["*.js"]
+    rules:
+      "@typescript-eslint/no-unsafe-assignment": 0 # avoid linter errors with .js files
+      "@typescript-eslint/no-unsafe-call": 0
+      "@typescript-eslint/no-unsafe-member-access": 0
+      "@typescript-eslint/no-unsafe-return": 0
+      "@typescript-eslint/no-unused-vars": 0
+```
+
+That's it! You should have a fully working ESLint setup in your project now.
+
+This is how _I_ format _my_ code in most of my projects. Please update the configuration to your likings. I have my own reasons why I enable certain settings and why others are disabled. But going through all of them here would make much sense. Instead, please simply update it to your personal preferences.
+
 ## Testing
 
 You can test the setup locally. However, due to the nature of this setup you will need to deploy the stack at least once to get everything prepared properly for local execution. Once the stack is deployed, no access to AWS is needed other than read-only to the stack itself as well as its dependencies. This allows developers to write and test code even if not everyone has full deployment access.
