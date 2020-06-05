@@ -13,7 +13,7 @@ export default function App() {
         <h1 className="App-title">Welcome to {config.app.TITLE}</h1>
       </header>
       <p className="App-intro">
-        To get started, edit <code>src/App.js</code> and save to reload.
+        To get started, edit <code>src/App.jsx</code> and save to reload.
       </p>
     </div>
   );

@@ -31,6 +31,9 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    extensions: [".js", ".jsx"],
+  },
   output: {
     libraryTarget: "commonjs2",
     path: path.join(__dirname, ".webpack"),

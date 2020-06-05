@@ -7,7 +7,7 @@ const isOffline = !!process.env.IS_OFFLINE;
 
 module.exports = {
   entry: {
-    main: path.join(__dirname, "src/browser/index.js"),
+    main: path.join(__dirname, "src/browser/index.jsx"),
   },
   target: "web",
   mode: isOffline ? "development" : "production",
@@ -84,6 +84,9 @@ module.exports = {
         use: "url-loader",
       },
     ],
+  },
+  resolve: {
+    extensions: [".js", ".jsx"],
   },
   output: {
     path: path.join(__dirname, "dist"),

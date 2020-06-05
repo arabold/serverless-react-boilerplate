@@ -1,7 +1,7 @@
 /**
  * Configuration
  */
-import Manifest from "../../public/manifest.json";
+import manifest from "../../public/manifest.json";
 
 /** Whether we're running on a local desktop or on AWS Lambda */
 const isLocal = process.env.IS_LOCAL || process.env.IS_OFFLINE;
@@ -18,9 +18,9 @@ const config = {
   /** Application Config */
   app: {
     /** Name of the app is loaded from the `manifest.json` */
-    TITLE: Manifest.short_name,
+    TITLE: manifest.short_name,
     /** Theme is also loaded from the `manifest.json` */
-    THEME_COLOR: Manifest.theme_color,
+    THEME_COLOR: manifest.theme_color,
     /** URL to our public API Gateway endpoint */
     URL: isLocal ? "http://localhost:3000" : process.env.APIGATEWAY_URL,
     /** Where the bundled distribution files (`index.js`, `index.css`) are hosted */
