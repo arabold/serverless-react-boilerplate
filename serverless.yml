@@ -1,5 +1,6 @@
 ---
 service: serverless-react-boilerplate
+configValidationMode: off
 
 provider:
   name: aws
@@ -29,7 +30,6 @@ provider:
 
 plugins:
   - serverless-webpack
-  - serverless-export-env
   - serverless-plugin-scripts
   - serverless-offline
   - serverless-s3-deploy

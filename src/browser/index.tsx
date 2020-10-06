@@ -1,7 +1,7 @@
 import "./index.css";
 
 /**
- * Client
+ * Frontend code running in browser
  */
 import React from "react";
 import { hydrate } from "react-dom";

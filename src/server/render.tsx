@@ -13,6 +13,9 @@ import { Stats } from "./types";
 /** Whether we're running on a local desktop or on AWS Lambda */
 const isLocal = process.env.IS_LOCAL || process.env.IS_OFFLINE;
 
+/**
+ * Server-side rendering
+ */
 export default async function render(): Promise<string> {
   let stats: Stats = { main: "index.js", css: "index.css" };
   if (!isLocal) {

@@ -46,12 +46,13 @@ module.exports = {
     }),
     new StatsWriterPlugin({
       transform(data, opts) {
+        console.log("TRANSFORM IS CALLED!!!!!!!!!")
         const assets = data.assetsByChunkName.main;
         const stats = JSON.stringify(
           {
             main: assets.find((path) => path.endsWith(".js")),
             css: assets.find((path) => path.endsWith(".css")),
-          },
+          }, 
           null,
           2,
         );
@@ -87,9 +88,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
+          MiniCssExtractPlugin.loader,
           "css-loader",
         ],
       },
