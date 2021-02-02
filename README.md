@@ -92,7 +92,9 @@ I would recommend to create a separate Serverless service that provides the fron
 
 ### Redux, React-Router, etc.
 
-The goal of this boilerplate is to offer a minimal setup that can be used as a basis for pretty much all your React needs. A lot of people love [Redux](https://redux.js.org/), rely on [React-Router](https://reacttraining.com/react-router/) or need other external modules. I have intentionally left these out of the boilerplate code but it should be trivial to add them, following the standard documentation steps.
+The goal of this boilerplate is to offer a minimal setup that can be used as a basis for pretty much all your React needs. A lot of people love [Redux](https://redux.js.org/), rely on [React Router](https://reactrouter.com/) or need other external modules. I have intentionally left these out of the boilerplate code but it should be trivial to add them, following the standard documentation steps.
+
+If you are interested in integrating with [React Router](https://reactrouter.com/), checkout out the [Added React Router example configuration](https://github.com/arabold/serverless-react-boilerplate/pull/16/files) Pull Request.
 
 ### Sass, Styled Components, etc.
 
@@ -103,6 +105,7 @@ Similar to the statement above, I have decided against integrating with a specif
 This project constist of very little JavaScript and porting it to Flow or TypeScript is relatively straight forward. However, as pretty much all my own projects are written in TypeScript I'm providing a separate [TypeScript branch](https://github.com/arabold/serverless-react-boilerplate/tree/typescript). It contains everything necessary to run a TypeScript based React application.
 
 ### Code Formatting & Adding ESLint
+
 To keep this repository lightweight no ESLint rules are included. There are many different plugins and people tend to prefer different coding styles. The existing code should be easily adaptable to any style you personally prefer. I recommend using [Prettier](https://prettier.io/) to format your code automatically and a default configuration is already part of this repo, defined in `package.json`. In addition, I recommend adding [ESLint](https://eslint.org/) and [Husky](https://github.com/typicode/husky) to your project to ensure your coding guidelines are followed.
 
 To add ESLint with my preferred settings, follow these teps:
@@ -207,10 +210,10 @@ overrides:
       "@typescript-eslint/no-unused-vars": 0
 ```
 
-
 That's it! You should have a fully working ESLint setup in your project now.
 
 This is how _I_ format _my_ code in most of my projects. Please update the configuration to your likings. I have my own reasons why I enable certain settings and why others are disabled. But going through all of them here would make much sense. Instead, please simply update it to your personal preferences.
+
 </details>
 
 ## Testing
