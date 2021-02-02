@@ -2,7 +2,9 @@
  * Server Side Rendering
  */
 import React from "react";
+import { APIGatewayEvent } from "aws-lambda";
 import { renderToString } from "react-dom/server";
+import { StaticRouter } from "react-router-dom";
 
 import App from "../browser/App";
 import ConfigContext from "../components/ConfigContext";
@@ -16,7 +18,7 @@ const isLocal = process.env.IS_LOCAL || process.env.IS_OFFLINE;
 /**
  * Server-side rendering
  */
-export default async function render(): Promise<string> {
+export default async function render(event: APIGatewayEvent): Promise<string> {
   let stats: Stats = { main: "index.js", css: "index.css" };
   if (!isLocal) {
     try {
@@ -28,7 +30,9 @@ export default async function render(): Promise<string> {
 
   const content = renderToString(
     <ConfigContext.Provider value={config}>
-      <App />
+      <StaticRouter basename={config.app.URL} location={event.path}>
+        <App />
+      </StaticRouter>
     </ConfigContext.Provider>,
   );
   return html({ stats, content, config });

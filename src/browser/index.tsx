@@ -5,6 +5,7 @@ import "./index.css";
  */
 import React from "react";
 import { hydrate } from "react-dom";
+import { BrowserRouter } from "react-router-dom";
 
 import ConfigContext from "../components/ConfigContext";
 import { Config } from "../server/config";
@@ -15,9 +16,13 @@ const config = (window as any).__CONFIG__ as Config;
 delete (window as any).__CONFIG__;
 /* eslint-enable @typescript-eslint/no-unsafe-member-access */
 
+const basename = config.app.URL.match(/^(?:https?:\/\/)?[^\/]+(\/?.+)?$/i)?.[1];
+
 hydrate(
   <ConfigContext.Provider value={config}>
-    <App />
+    <BrowserRouter basename={basename}>
+      <App />
+    </BrowserRouter>
   </ConfigContext.Provider>,
   document.querySelector("#root"),
 );

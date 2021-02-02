@@ -8,6 +8,6 @@ export const serve = async (event: APIGatewayEvent, context: Context): Promise<A
     headers: {
       "Content-Type": "text/html",
     },
-    body: await render(),
+    body: await render(event),
   };
 };
