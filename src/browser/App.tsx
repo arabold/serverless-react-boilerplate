@@ -1,24 +1,25 @@
 import "./App.css";
 
 import React from "react";
+import { Route, Switch } from "react-router-dom";
 
 import useConfig from "../components/useConfig";
-import logo from "./logo.svg";
+import MainPage from "./pages/MainPage";
+import ErrorPage from "./pages/ErrorPage";
 
 /**
  * Our Web Application
  */
 export default function App() {
-  const config = useConfig();
+  const { app } = useConfig();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1 className="App-title">Welcome to {config.app.TITLE}</h1>
-      </header>
-      <p className="App-intro">
-        To get started, edit <code>src/browser/App.jsx</code> and save to reload.
-      </p>
-    </div>
+    <Switch>
+      <Route exact path="/">
+        <MainPage />
+      </Route>
+      <Route>
+        <ErrorPage />
+      </Route>
+    </Switch>
   );
 }
