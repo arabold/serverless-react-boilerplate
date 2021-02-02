@@ -10,6 +10,10 @@ provider:
   memorySize: 512
   timeout: 6
   logRetentionInDays: 7
+  lambdaHashingVersion: 20201221 # for upcoming Serverless 3.0.0
+
+  apiGateway:
+    shouldStartNameWithService: true # for upcoming Serverless 3.0.0
 
   environment:
     SERVERLESS_PROJECT: ${self:service}
