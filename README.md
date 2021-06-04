@@ -69,6 +69,14 @@ Though we use the same source code for both the server-side and browser renderin
 1. Backend code running on AWS Lambda. The main entry point is `./src/server/render.tsx`. It contains the handler function that is invoked by AWS Lambda.The packaging is controlled by `webpack.server.config.js` and optimized for Node.js 12.
 2. Frontend code hosted in an S3 bucket and loaded by the browser. Main entry point is `./src/browser/index.tsx`. It's packaged using the `webpack.browser.config.js`, optimized for web browsers. The output files will have their content hash added to their names to enable long term caching in the browser.
 
+#### Code Splitting
+
+`webpack.browser.config.js` defines some default code splitting settings that optimize browser loading times and should make sense for most projects:
+
+- Shared compoments (in the `src/components` folder) are loaded in a separate `components.js` chunk.
+- All external Node modules (in the `node_modules/` folder) are loaded in the `vendor.js` chunk. External modules usually don't change as often as the rest of your application and this split will improve browser caching for your users.
+- The rest of the application is loaded in the `main.js` chunk.
+
 ## Customization
 
 ### Serverless Project
@@ -104,121 +112,9 @@ If you are interested in integrating with [React Router](https://reactrouter.com
 
 Similar to the statement above, I have decided against integrating with a specific framework. The boilerplate uses plain and simple CSS and integrating another system should be easy enough.
 
-### Flow and TypeScript
-
-This project constist of very little JavaScript and porting it to Flow or TypeScript is relatively straight forward. However, as pretty much all my own projects are written in TypeScript I'm providing a separate [TypeScript branch](https://github.com/arabold/serverless-react-boilerplate/tree/typescript). It contains everything necessary to run a TypeScript based React application.
-
 ### Code Formatting & Adding ESLint
 
-To keep this repository lightweight no ESLint rules are included. There are many different plugins and people tend to prefer different coding styles. The existing code should be easily adaptable to any style you personally prefer. I recommend using [Prettier](https://prettier.io/) to format your code automatically and a default configuration is already part of this repo, defined in `package.json`. In addition, I recommend adding [ESLint](https://eslint.org/) and [Husky](https://github.com/typicode/husky) to your project to ensure your coding guidelines are followed.
-
-To add ESLint with my preferred settings, follow these teps:
-
-<details>
-Install ESLint and Husky, as well as some additional Prettier dependencies:
-
-```sh
-npm install --save-dev eslint-plugin-react-hooks eslint eslint-plugin-filenames eslint-plugin-prettier eslint-plugin-promise eslint-plugin-react husky import-sort-style-module lint-staged prettier-plugin-import-sort prettier-plugin-package
-```
-
-Update your `package.json` and add the following sections somewhere at the end. Husky will automatically compile and lint your changes before every new commit to ensure all new files adhere to the defined standard.
-
-```json
-/* package.json */
-{
-  ...
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsc --noEmit && lint-staged"
-    }
-  },
-  "importSort": {
-    ".js, .jsx, .ts, .tsx": {
-      "style": "module",
-      "parser": "typescript"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": ["npx prettier --write", "eslint --fix"]
-  }
-}
-```
-
-Create a new `.eslintrc.yml` file in your project root folder and add the following content. Adjust the rules to your linking:
-
-```yml
-# .eslintrc.yml
-env:
-  node: true
-  browser: true
-  jest: true
-plugins:
-  - "@typescript-eslint"
-  - filenames
-  - prettier
-  - promise
-  - react
-  - react-hooks
-extends:
-  - eslint:recommended
-  - plugin:react/recommended
-  - plugin:promise/recommended
-  - plugin:@typescript-eslint/eslint-recommended
-  - plugin:@typescript-eslint/recommended
-  - plugin:@typescript-eslint/recommended-requiring-type-checking
-parser: "@typescript-eslint/parser"
-parserOptions:
-  project: ./tsconfig.json
-settings:
-  react:
-    version: detect
-rules:
-  "@typescript-eslint/ban-types": 0 # to allow "{}" as a type
-  "@typescript-eslint/camelcase": 0 #deprecated
-  "@typescript-eslint/explicit-function-return-type": 0 # allow implicit return types
-  "@typescript-eslint/explicit-module-boundary-types": 0
-  "@typescript-eslint/interface-name-prefix": 0 # interfaces prefixed with "I" are perfectly fine
-  "@typescript-eslint/no-empty-function": 0
-  "@typescript-eslint/no-explicit-any": 0
-  "@typescript-eslint/no-floating-promises": error
-  "@typescript-eslint/no-inferrable-types": 0
-  "@typescript-eslint/no-unused-vars": [error, { vars: all, ignoreRestSiblings: true }]
-  "@typescript-eslint/no-useless-constructor": error
-  "@typescript-eslint/no-var-requires": 0 # allow `require()`
-  "@typescript-eslint/require-await": 0
-  filenames/match-regex: 0
-  filenames/match-exported: error
-  filenames/no-index: 0
-  import/order: 0 # we use prettier import sorting by module
-  no-console: 0
-  no-restricted-imports:
-    - error
-    - paths:
-        - name: moment
-          message: Use date-fns instead!
-        - name: bluebird
-          message: Use native Promises and async/await instead!
-  no-unused-expressions: 0 # use @typescript-eslint/no-unused-expressions instead
-  no-unused-vars: 0 # use @typescript-eslint/no-unused-vars instead
-  no-useless-constructor: 0 # use @typescript-eslint/no-useless-constructor instead
-  prettier/prettier: error
-  react-hooks/exhaustive-deps: error
-  react-hooks/rules-of-hooks: error
-overrides:
-  - files: ["*.js"]
-    rules:
-      "@typescript-eslint/no-unsafe-assignment": 0 # avoid linter errors with .js files
-      "@typescript-eslint/no-unsafe-call": 0
-      "@typescript-eslint/no-unsafe-member-access": 0
-      "@typescript-eslint/no-unsafe-return": 0
-      "@typescript-eslint/no-unused-vars": 0
-```
-
-That's it! You should have a fully working ESLint setup in your project now.
-
-This is how _I_ format _my_ code in most of my projects. Please update the configuration to your likings. I have my own reasons why I enable certain settings and why others are disabled. But going through all of them here would make much sense. Instead, please simply update it to your personal preferences.
-
-</details>
+To keep this repository lightweight no ESLint rules are included. There are many different plugins and people tend to prefer different coding styles. The existing code should be easily adaptable to any style you personally prefer. I recommend using [Prettier](https://prettier.io/) to format your code automatically and a default configuration is already part of this repository, defined in `package.json`. In addition, I recommend adding [ESLint](https://eslint.org/) and [Husky](https://github.com/typicode/husky) to your project to ensure your coding guidelines are followed.
 
 ## Testing
 
@@ -257,4 +153,5 @@ This will delete all resources but the distribution S3 bucket. As it still conta
 - React "Fast Refresh" (previously known as "Hot Reloading") using the [React Refresh Webpack Plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin).
 - Built-in support for [code splitting](https://webpack.js.org/guides/code-splitting/) and [tree shaking](https://webpack.js.org/guides/tree-shaking/) to optimize page loading times.
 - Full [TypeScript](https://www.typescriptlang.org/) support using Babel 7 and Webpack 5, including custom [module resolution](https://www.typescriptlang.org/docs/handbook/module-resolution.html).
+- Handle server side errors more gracefully. Update `handler.ts` to add your own custom error handling code such as [Youch](https://github.com/poppinss/youch).
 - Code cleanup and simplification
