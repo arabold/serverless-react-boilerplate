@@ -1,24 +1,13 @@
 const path = require("path");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const { HotModuleReplacementPlugin } = require("webpack");
 
 const isOffline = !!process.env.IS_OFFLINE;
-
-const babelOptions = {
-  // Don't use .babelrc here but web browser optimized settings
-  presets: [
-    [
-      "@babel/preset-env",
-      {
-        targets: { browsers: ["last 2 versions"] },
-        // debug: isOffline,
-      },
-    ],
-    "@babel/preset-typescript",
-    "@babel/preset-react",
-  ],
-};
 
 module.exports = {
   entry: {
@@ -26,31 +15,78 @@ module.exports = {
   },
   target: "web",
   mode: isOffline ? "development" : "production",
+  node: {
+    __dirname: true,
+    __filename: true,
+  },
   devServer: {
-    contentBase: path.join(__dirname, "public"),
+    hot: true,
+    contentBase: false,
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
       "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
+    },
+    watchOptions: {
+      watch: true,
+      ignored: ["**/node_modules", "**/dist", "**/.webpack"],
+    },
+    writeToDisk: (filePath) => {
+      // Always write the stats.json to disk, so we can load it in code
+      return /stats\.json$/.test(filePath);
     },
   },
   performance: {
     // Turn off size warnings for entry points
     hints: false,
   },
-  devtool: "nosources-source-map",
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      cacheGroups: {
+        // TODO: Customize code splitting to your needs
+        vendor: {
+          name: "vendor",
+          test: /[\\/]node_modules[\\/]/,
+          chunks: "all",
+        },
+        components: {
+          name: "components",
+          test: /[\\/]src[\\/]components[\\/]/,
+          chunks: "all",
+          minSize: 0,
+        },
+      },
+    },
+  },
+  // React recommends `cheap-module-source-map` for development
+  devtool: isOffline ? "cheap-module-source-map" : "nosources-source-map",
   plugins: [
     new CleanWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          // Copy content from `./public/` folder to our output directory
+          context: "./public/",
+          from: "**/*",
+        },
+      ],
+    }),
     new MiniCssExtractPlugin({
-      filename: isOffline ? "index.css" : "index.[contenthash:8].css",
+      filename: isOffline ? "[name].css" : "[name].[contenthash:8].css",
     }),
     new StatsWriterPlugin({
-      transform(data, opts) {
-        const assets = data.assetsByChunkName.main;
+      filename: "stats.json",
+      transform(data, _opts) {
+        const assets = data.assetsByChunkName;
         const stats = JSON.stringify(
           {
-            main: assets.find((path) => path.endsWith(".js")),
-            css: assets.find((path) => path.endsWith(".css")),
+            scripts: Object.entries(assets).flatMap(([_asset, files]) => {
+              return files.filter((filename) => filename.endsWith(".js") && !/\.hot-update\./.test(filename));
+            }),
+            styles: Object.entries(assets).flatMap(([_asset, files]) => {
+              return files.filter((filename) => filename.endsWith(".css") && !/\.hot-update\./.test(filename));
+            }),
           },
           null,
           2,
@@ -58,31 +94,15 @@ module.exports = {
         return stats;
       },
     }),
-  ],
+    isOffline && new HotModuleReplacementPlugin(),
+    isOffline && new ReactRefreshWebpackPlugin(),
+  ].filter(Boolean),
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(ts|js)x?$/,
         exclude: /node_modules/, // we shouldn't need processing `node_modules`
-        use: [
-          {
-            loader: "babel-loader",
-            options: babelOptions,
-          },
-        ],
-      },
-      {
-        test: /\.ts(x?)$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: "babel-loader",
-            options: babelOptions,
-          },
-          {
-            loader: "ts-loader",
-          },
-        ],
+        use: "babel-loader",
       },
       {
         test: /\.css$/,
@@ -95,10 +115,13 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".jsx"],
+    // TsconfigPathsPlugin applies the path aliases defined in `.tsconfig.json`
+    plugins: [new TsconfigPathsPlugin()],
+    extensions: [".browser.tsx", ".browser.ts", ".browser.jsx", ".browser.js", ".tsx", ".ts", ".jsx", ".js"],
   },
   output: {
     path: path.join(__dirname, "dist"),
-    filename: isOffline ? "index.js" : "index.[contenthash:8].js",
+    filename: isOffline ? "[name].js" : "[name].[contenthash:8].js",
+    crossOriginLoading: "anonymous", // enable cross-origin loading of chunks
   },
 };

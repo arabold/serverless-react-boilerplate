@@ -10,7 +10,9 @@ Lightweight boilerplate project to setup a React 16 web application on AWS Lambd
 - Universal app; server-side rendering with dynamic configuration context passed from backend to browser.
 - Self-contained; no additional setup steps necessary other than running `npx sls deploy`.
 - Lightweight; no mandatory `redux`, `react-router`, `sass`, `less` or any other 3rd party dependency for full flexibility.
-- Full [TypeScript](https://www.typescriptlang.org/) support using Babel 7 and Webpack 4.
+- React "Fast Refresh" (previously known as "Hot Reloading") using the [React Refresh Webpack Plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin).
+- Built-in support for [code splitting](https://webpack.js.org/guides/code-splitting/) and [tree shaking](https://webpack.js.org/guides/tree-shaking/) to optimize page loading times.
+- Full [TypeScript](https://www.typescriptlang.org/) support using Babel 7 and Webpack 5, including custom [module resolution](https://www.typescriptlang.org/docs/handbook/module-resolution.html).
 - Working [Jest](https://jestjs.io/) test environment.
 
 [Looking for the plain JavaScript version of this boilerplate?](https://github.com/arabold/serverless-react-boilerplate/)
@@ -42,8 +44,10 @@ serverless-react-boilerplate/
 │   └── server/
 │       └── ... - Server-side code running on AWS Lambda
 │
-├── handler.js - AWS Lambda function handler
+├── handler.ts - AWS Lambda function handler
 ├── serverless.yaml - Project configuration
+├── babel.config.js - Babel configuration
+├── jest.config.js - Jest configuration
 ├── webpack.browser.config.js - Webpack configuration for client-side code
 ├── webpack.server.config.js - Webpack configuration for the Lambda backend
 └── ...
@@ -56,7 +60,7 @@ The project is based on the [Serverless Framework](https://serverless.com) and m
 - [Webpack Plugin](https://github.com/serverless-heaven/serverless-webpack) - We use Webpack for packaging our sources.
 - [Offline Plugin](https://github.com/dherault/serverless-offline) - The Serverless Offline Plugin allows you to run Serverless applications locally as if they would be deployed on AWS. This is especially helpful for testing web applications and APIs without having to deploy them anywhere.
 - [Scripts Plugin](https://github.com/mvila/serverless-plugin-scripts#readme) - Run shell scripts as part of your Serverless workflow
-- [S3 Deploy Plugin](https://github.com/funkybob/serverless-s3-deploy) - Deploy files to S3 buckets. This is used for uploading static content like images and the generated `index.js`.
+- [S3 Deploy Plugin](https://github.com/funkybob/serverless-s3-deploy) - Deploy files to S3 buckets. This is used for uploading static content like images and the generated `main.js`.
 
 ### Webpack
 
@@ -226,7 +230,7 @@ The whole application can be deployed with a single command:
 npx sls deploy
 ```
 
-For local testing run the following command and open your web browser at http://localhost:3000/dev (with `dev` being the `stage` name configured in your `serverless.yml`). Static content such as images will be served via the [Webpack DevServer](https://webpack.js.org/configuration/dev-server/) running on http://localhost:8080. Note that the app has to be deployed first before you will be able to run locally.
+For local testing run the following command and open your web browser at http://localhost:3000/. Static content such as images will be served via the [Webpack DevServer](https://webpack.js.org/configuration/dev-server/) running on http://localhost:8080. Note that the app has to be deployed first before you will be able to run locally.
 
 ```sh
 npm start

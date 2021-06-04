@@ -1,13 +1,18 @@
 const path = require("path");
 const slsw = require("serverless-webpack");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
   entry: slsw.lib.entries,
   target: "node",
   mode: slsw.lib.webpack.isLocal ? "development" : "production",
+  node: {
+    __dirname: true,
+    __filename: true,
+  },
   optimization: {
-    // We don't need to minimize our Lambda code.
-    minimize: false,
+    minimize: false, // We don't need to minimize our Lambda code.
+    moduleIds: "named",
   },
   performance: {
     // Turn off size warnings for entry points
@@ -17,25 +22,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(ts|js)x?$/,
         exclude: /node_modules/, // we shouldn't need processing `node_modules`
-        use: [
-          {
-            loader: "babel-loader",
-          },
-        ],
-      },
-      {
-        test: /\.ts(x?)$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: "babel-loader",
-          },
-          {
-            loader: "ts-loader",
-          },
-        ],
+        use: "babel-loader",
       },
       {
         test: /\.css$/,
@@ -48,7 +37,9 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".jsx"],
+    // TsconfigPathsPlugin applies the path aliases defined in `.tsconfig.json`
+    plugins: [new TsconfigPathsPlugin()],
+    extensions: [".server.tsx", ".server.ts", ".server.jsx", ".server.js", ".tsx", ".ts", ".jsx", ".js"],
   },
   output: {
     libraryTarget: "commonjs2",

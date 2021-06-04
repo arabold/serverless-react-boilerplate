@@ -1,6 +1,5 @@
+/** Webpack `stats.json` file structure */
 export type Stats = {
-  /** CSS file name */
-  css: string;
-  /** Main JS file name */
-  main: string;
-};
+  scripts: string[]
+  styles: string[]
+}
