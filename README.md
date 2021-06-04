@@ -230,7 +230,7 @@ The whole application can be deployed with a single command:
 npx sls deploy
 ```
 
-For local testing run the following command and open your web browser at http://localhost:3000/. Static content such as images will be served via the [Webpack DevServer](https://webpack.js.org/configuration/dev-server/) running on http://localhost:8080. Note that the app has to be deployed first before you will be able to run locally.
+For local testing run the following command and open your web browser at http://localhost:3000/04. Static content such as images will be served via the [Webpack DevServer](https://webpack.js.org/configuration/dev-server/) running on http://localhost:8080. Note that the app has to be deployed first before you will be able to run locally.
 
 ```sh
 npm start
@@ -249,3 +249,12 @@ npx sls remove
 ```
 
 This will delete all resources but the distribution S3 bucket. As it still contains the bundles you will have to delete it manually for now.
+
+## Changelog
+
+### 2021-06-04
+
+- React "Fast Refresh" (previously known as "Hot Reloading") using the [React Refresh Webpack Plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin).
+- Built-in support for [code splitting](https://webpack.js.org/guides/code-splitting/) and [tree shaking](https://webpack.js.org/guides/tree-shaking/) to optimize page loading times.
+- Full [TypeScript](https://www.typescriptlang.org/) support using Babel 7 and Webpack 5, including custom [module resolution](https://www.typescriptlang.org/docs/handbook/module-resolution.html).
+- Code cleanup and simplification
