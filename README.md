@@ -3,7 +3,7 @@
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
 [![dependencies](https://img.shields.io/david/arabold/serverless-react-boilerplate.svg)](https://github.com/arabold/serverless-react-boilerplate)
 
-Lightweight boilerplate project to setup a React 16 web application on AWS Lambda using the Serverless Framework.
+Lightweight boilerplate project to setup a React 17 web application on AWS Lambda using the Serverless Framework.
 
 ## Key Features
 
@@ -150,8 +150,10 @@ This will delete all resources but the distribution S3 bucket. As it still conta
 
 ### 2021-06-04
 
+- Updated to React 17
 - React "Fast Refresh" (previously known as "Hot Reloading") using the [React Refresh Webpack Plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin).
 - Built-in support for [code splitting](https://webpack.js.org/guides/code-splitting/) and [tree shaking](https://webpack.js.org/guides/tree-shaking/) to optimize page loading times.
 - Full [TypeScript](https://www.typescriptlang.org/) support using Babel 7 and Webpack 5, including custom [module resolution](https://www.typescriptlang.org/docs/handbook/module-resolution.html).
 - Handle server side errors more gracefully. Update `handler.ts` to add your own custom error handling code such as [Youch](https://github.com/poppinss/youch).
 - Code cleanup and simplification
+
