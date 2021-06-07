@@ -118,15 +118,9 @@ To keep this repository lightweight no ESLint rules are included. There are many
 
 ## Testing
 
-You can test the setup locally. However, due to the nature of this setup you will need to deploy the stack at least once to get everything prepared properly for local execution. Once the stack is deployed, no access to AWS is needed other than read-only to the stack itself as well as its dependencies. This allows developers to write and test code even if not everyone has full deployment access.
+You can test the setup locally. No direct access to AWS is needed. This allows developers to write and test code even if not everyone has full deployment access.
 
-The whole application can be deployed with a single command:
-
-```sh
-npx sls deploy
-```
-
-For local testing run the following command and open your web browser at http://localhost:3000/04. Static content such as images will be served via the [Webpack DevServer](https://webpack.js.org/configuration/dev-server/) running on http://localhost:8080. Note that the app has to be deployed first before you will be able to run locally.
+For local testing run the following command and open your web browser at http://localhost:3000/. Static content such as images will be served via the [Webpack DevServer](https://webpack.js.org/configuration/dev-server/) running on http://localhost:8080. Note that the app has to be deployed first before you will be able to run locally.
 
 ```sh
 npm start
@@ -136,6 +130,12 @@ Testing is set up as well, using Jest and will execute all `*.test.ts` and `*.te
 
 ```sh
 npm test
+```
+
+The whole application can be deployed with a single command:
+
+```sh
+npx sls deploy
 ```
 
 And finally to remove all AWS resources again run:
@@ -156,4 +156,3 @@ This will delete all resources but the distribution S3 bucket. As it still conta
 - Full [TypeScript](https://www.typescriptlang.org/) support using Babel 7 and Webpack 5, including custom [module resolution](https://www.typescriptlang.org/docs/handbook/module-resolution.html).
 - Handle server side errors more gracefully. Update `handler.ts` to add your own custom error handling code such as [Youch](https://github.com/poppinss/youch).
 - Code cleanup and simplification
-
