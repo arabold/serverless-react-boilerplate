@@ -21,19 +21,22 @@ module.exports = {
   },
   devServer: {
     hot: true,
-    contentBase: false,
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
       "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
     },
-    watchOptions: {
-      watch: true,
-      ignored: ["**/node_modules", "**/dist", "**/.webpack"],
+    watchFiles: {
+      paths: ["**/*"],
+      options: {
+        ignored: ["**/node_modules", "**/dist", "**/.webpack", "**/.serverless"],
+      },
     },
-    writeToDisk: (filePath) => {
-      // Always write the stats.json to disk, so we can load it in code
-      return /stats\.json$/.test(filePath);
+    devMiddleware: {
+      writeToDisk: (filePath) => {
+        // Always write the stats.json to disk, so we can load it in code
+        return /\bstats\.json$/.test(filePath);
+      },
     },
   },
   performance: {
@@ -110,7 +113,12 @@ module.exports = {
       },
       {
         test: /\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$/,
-        use: "url-loader",
+        use: [
+          {
+            loader: "url-loader",
+            options: { limit: 8192 },
+          },
+        ],
       },
     ],
   },
