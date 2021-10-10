@@ -32,7 +32,7 @@ All resources, including the S3 bucket for hosting static content, are created a
 ```
 serverless-react-boilerplate/
 │
-├── public/ - Public assets such as images
+├── public/ - Public assets which will retain their original file names and folder structure
 │   ├── favicon.ico - Favicon
 │   └── manifest.json - Web page manifest
 │
@@ -105,6 +105,8 @@ export default function MyComponent() {
 The boilerplate comes with a preferred folder structure for your project. However, you can change it to your liking. If you decide to do so, make sure to update the respective Webpack and Serverless configurations to point to the new locations.
 
 Generally, you shouldn't need to touch the contents of the `src/browser/` and `src/server/` folders, with exception of updating the configuration. Common components shared across your React site should go into the `src/components/` folder. It currently contains only the `ConfigContext` provider and the `useConfig` hook implementation. Code splitting has already been configured to package these shared components separately from the rest of your application. You might want to place individual web pages or screens of your application into subfolders directly underneath `src/` or next to `App.tsx`.
+
+Images can be loaded directly from the `src/` folder as demonstrated in `App.tsx`. Webpack will automatically manage your images, ensure they use a unique file name and are loaded either from S3 or get embedded directly into the generated HTML if they are small enough. The `public/` folder on the other hand is used for static assets that should retain their original file names and folder structure. All content of this folder will be uploaded to S3 exactly 1:1 and served from there. It is the perfect place to put your `favicon.ico`, `robots.txt`, and similar static assets that you need to reference by a fixed unchanging URL.
 
 ### Adding a backend API
 
