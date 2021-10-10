@@ -1,8 +1,8 @@
 import "./App.css";
 
-import React from "react";
+import * as React from "react";
 
-import useConfig from "../components/useConfig";
+import useConfig from "./components/useConfig";
 import logo from "./logo.svg";
 
 /**

@@ -3,7 +3,7 @@
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
 [![dependencies](https://img.shields.io/david/arabold/serverless-react-boilerplate.svg)](https://github.com/arabold/serverless-react-boilerplate)
 
-Lightweight boilerplate project to setup a React 17 web application on AWS Lambda using the Serverless Framework.
+Lightweight boilerplate project to set up a React 17 web application on AWS Lambda using the Serverless Framework.
 
 ## Key Features
 
@@ -21,9 +21,9 @@ Lightweight boilerplate project to setup a React 17 web application on AWS Lambd
 
 ### How Does It Work?
 
-The idea is that we use AWS Lambda to serve the dynamic part of our app, the server-side logic, and perform the server-side rendering. For all static data like images, stylesheets and even the app's `index.tsx` that is loaded in the browser, we use an S3 bucket for public hosting.
+The idea is that we use AWS Lambda to serve the dynamic part of our app, the server-side logic, and perform the server-side rendering. For all static data like images, stylesheets, and even the app's `index.tsx` that is loaded in the browser, we use an S3 bucket for public hosting.
 
-This combination makes our app fast and incredibly scalable. AWS will spin up new Lambda instances once your number of users increases, handling even the largest spikes fully automatically, while incurring virtually no costs when your app isn't used. At the same time S3 provides a robust and fast platform for your static content so you don't have to waste your own computing resources.
+This combination makes our app fast and incredibly scalable. AWS will spin up new Lambda instances once your number of users increases, handling even the largest spikes fully automatically while incurring virtually no costs when your app isn't used. At the same time, S3 provides a robust and fast platform for your static content so you don't have to waste your own computing resources.
 
 All resources, including the S3 bucket for hosting static content, are created and configured automatically when your app is deployed the first time. You can make changes to the default setup by updating your `serverless.yml` to your linking.
 
@@ -41,11 +41,13 @@ serverless-react-boilerplate/
 │   │   └── ... - Client-side code running in the browser as well as during server-side rendering
 │   ├── components/
 │   │   └── ... - React components
-│   └── server/
-│       └── ... - Server-side code running on AWS Lambda
+│   ├── server/
+│   │   └── ... - Server-side code running on AWS Lambda
+│   ├── App.tsx - The web application's root component.
+│   └── ... - Other files used by the application
 │
 ├── handler.ts - AWS Lambda function handler
-├── serverless.yaml - Project configuration
+├── serverless.yml - Project configuration
 ├── babel.config.js - Babel configuration
 ├── jest.config.js - Jest configuration
 ├── webpack.browser.config.js - Webpack configuration for client-side code
@@ -55,7 +57,7 @@ serverless-react-boilerplate/
 
 ### Serverless
 
-The project is based on the [Serverless Framework](https://serverless.com) and makes use of a number of plugins:
+The project is based on the [Serverless Framework](https://serverless.com) and makes use of several plugins:
 
 - [Webpack Plugin](https://github.com/serverless-heaven/serverless-webpack) - We use Webpack for packaging our sources.
 - [Offline Plugin](https://github.com/dherault/serverless-offline) - The Serverless Offline Plugin allows you to run Serverless applications locally as if they would be deployed on AWS. This is especially helpful for testing web applications and APIs without having to deploy them anywhere.
@@ -66,14 +68,14 @@ The project is based on the [Serverless Framework](https://serverless.com) and m
 
 Though we use the same source code for both the server-side and browser rendering, the project will be packaged into two distinct bundles:
 
-1. Backend code running on AWS Lambda. The main entry point is `./src/server/render.tsx`. It contains the handler function that is invoked by AWS Lambda.The packaging is controlled by `webpack.server.config.js` and optimized for Node.js 12.
-2. Frontend code hosted in an S3 bucket and loaded by the browser. Main entry point is `./src/browser/index.tsx`. It's packaged using the `webpack.browser.config.js`, optimized for web browsers. The output files will have their content hash added to their names to enable long term caching in the browser.
+1. Backend code running on AWS Lambda. The main entry point is `./src/server/render.tsx`. It contains the handler function that is invoked by AWS Lambda. The packaging is controlled by `webpack.server.config.js` and optimized for Node.js 12.
+2. Frontend code hosted in an S3 bucket and loaded by the browser. Main entry point is `./src/browser/index.tsx`. It's packaged using the `webpack.browser.config.js`, optimized for web browsers. The output files will have their content hash added to their names to enable long-term caching in the browser.
 
 #### Code Splitting
 
-`webpack.browser.config.js` defines some default code splitting settings that optimize browser loading times and should make sense for most projects:
+`webpack.browser.config.js` defines some default code-splitting settings that optimize browser loading times and should make sense for most projects:
 
-- Shared compoments (in the `src/components` folder) are loaded in a separate `components.js` chunk.
+- Shared components (in the `src/components` folder) are loaded in a separate `components.js` chunk.
 - All external Node modules (in the `node_modules/` folder) are loaded in the `vendor.js` chunk. External modules usually don't change as often as the rest of your application and this split will improve browser caching for your users.
 - The rest of the application is loaded in the `main.js` chunk.
 
@@ -81,11 +83,11 @@ Though we use the same source code for both the server-side and browser renderin
 
 ### Serverless Project
 
-Update the `serverless.yaml` with your project name and additional resources you might need.
+Update the `serverless.yml` with your project name and additional resources you might need. For example, you might want to [create a custom domain name for your app](https://www.serverless.com/plugins/serverless-domain-manager).
 
 ### Configuration
 
-The frontend as well as the server-side code running on AWS Lambda share a common application configuration. Currently it is used for injecting the application name from the `public/manifest.json` as well as setting the public host names. You can extend the configuration by adding your own variables to `src/server/config.tsx`. They will become available in both your backend and frontend code via the `useConfig` hook:
+The frontend, as well as the server-side code running on AWS Lambda, share a common application configuration. Currently, it is used for injecting the application name from the `public/manifest.json` as well as setting the public hostnames. You can extend the configuration by adding your own variables to `src/server/config.tsx`. They will become available in both your backend and frontend code via the `useConfig` hook:
 
 ```js
 import useConfig from "../components/useConfig";
@@ -98,15 +100,21 @@ export default function MyComponent() {
 }
 ```
 
+### Adding Your Own Code
+
+The boilerplate comes with a preferred folder structure for your project. However, you can change it to your liking. If you decide to do so, make sure to update the respective Webpack and Serverless configurations to point to the new locations.
+
+Generally, you shouldn't need to touch the contents of the `src/browser/` and `src/server/` folders, with exception of updating the configuration. Common components shared across your React site should go into the `src/components/` folder. It currently contains only the `ConfigContext` provider and the `useConfig` hook implementation. Code splitting has already been configured to package these shared components separately from the rest of your application. You might want to place individual web pages or screens of your application into subfolders directly underneath `src/` or next to `App.tsx`.
+
 ### Adding a backend API
 
-I would recommend to create a separate Serverless service that provides the frontend with an API and protect it via [Amazon Cognito](https://aws.amazon.com/cognito/), a custom Authorizer or even just an API Key. Mixing React with pure backend API functions is possible and perfectly fine, but in my experience it quickly becomes a hassle and you need to take special care not to leak anything to the browser that's not supposed to be known there.
+I recommend creating a _separate_ Serverless service that provides the frontend with an API and protecting it with [Amazon Cognito](https://aws.amazon.com/cognito/), a custom Authorizer, or even just an API Key. Mixing React with pure backend API functions is possible and technically fine, but in my experience, it quickly becomes a hassle and you need to take special care not to leak anything to the browser that's not supposed to be known there.
 
 ### Redux, React-Router, etc.
 
 The goal of this boilerplate is to offer a minimal setup that can be used as a basis for pretty much all your React needs. A lot of people love [Redux](https://redux.js.org/), rely on [React Router](https://reactrouter.com/) or need other external modules. I have intentionally left these out of the boilerplate code but it should be trivial to add them, following the standard documentation steps.
 
-If you are interested in integrating with [React Router](https://reactrouter.com/), checkout out the [Added React Router example configuration](https://github.com/arabold/serverless-react-boilerplate/pull/16/files) Pull Request.
+If you are interested in integrating with [React Router](https://reactrouter.com/), check out out the [Added React Router example configuration](https://github.com/arabold/serverless-react-boilerplate/pull/16/files) Pull Request.
 
 ### Sass, Styled Components, etc.
 
@@ -126,7 +134,7 @@ For local testing run the following command and open your web browser at http://
 npm start
 ```
 
-Testing is set up as well, using Jest and will execute all `*.test.ts` and `*.test.tsx` ffiles in the `src/` directory:
+Testing is set up as well, using Jest and will execute all `*.test.ts` and `*.test.tsx` files in the `src/` directory:
 
 ```sh
 npm test
@@ -144,9 +152,15 @@ And finally to remove all AWS resources again run:
 npx sls remove
 ```
 
-This will delete all resources but the distribution S3 bucket. As it still contains the bundles you will have to delete it manually for now.
+This will delete all resources but the distribution S3 bucket. As it still contains the bundles you will have to delete the bucket manually for now.
 
 ## Changelog
+
+### 2021-10-10
+
+- Updated dependencies to the latest versions. This includes specifically the Webpack Dev Server 4.x.
+- Restructured the project structure to be more consistent. `App.tsx` and related files have been moved out for the `browser` folder directly into `src` as it is used by both the server and the browser rendering. You should rarely need to touch the contents of the `browser` or the `server` folder.
+- Updated the documentation (this file you're currently reading)
 
 ### 2021-06-04
 
@@ -154,5 +168,5 @@ This will delete all resources but the distribution S3 bucket. As it still conta
 - React "Fast Refresh" (previously known as "Hot Reloading") using the [React Refresh Webpack Plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin).
 - Built-in support for [code splitting](https://webpack.js.org/guides/code-splitting/) and [tree shaking](https://webpack.js.org/guides/tree-shaking/) to optimize page loading times.
 - Full [TypeScript](https://www.typescriptlang.org/) support using Babel 7 and Webpack 5, including custom [module resolution](https://www.typescriptlang.org/docs/handbook/module-resolution.html).
-- Handle server side errors more gracefully. Update `handler.ts` to add your own custom error handling code such as [Youch](https://github.com/poppinss/youch).
+- Handle server-side errors more gracefully. Update `handler.ts` to add your own custom error handling code such as [Youch](https://github.com/poppinss/youch).
 - Code cleanup and simplification

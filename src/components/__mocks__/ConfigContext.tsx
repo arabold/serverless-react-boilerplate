@@ -1,9 +1,9 @@
-import React from "react";
+import { createContext } from "react";
 
 import manifest from "../../../public/manifest.json";
 import { Config } from "../../server/config";
 
-const ConfigContext = React.createContext<Config>({
+const ConfigContext = createContext<Config>({
   app: {
     TITLE: `${manifest.short_name} Mock`,
     THEME_COLOR: manifest.theme_color,
