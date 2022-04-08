@@ -73,11 +73,11 @@ custom:
           - .amazonaws.com/
           - Ref: DistBucket
 
-  scripts:
-    hooks:
-      # Build the client-side script before packaging backend code
-      package:initialize: "npm run build:browser"
-      deploy:finalize: "npx sls s3deploy --stage ${self:provider.stage}"
+  # scripts:
+  #   hooks:
+  #     # Build the client-side script before packaging backend code
+  #     package:initialize: "npm run build:browser"
+  #     deploy:finalize: "npx sls s3deploy --stage ${self:provider.stage}"
 
   webpack:
     webpackConfig: "webpack.server.config.js"
