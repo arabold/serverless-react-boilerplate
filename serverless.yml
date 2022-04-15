@@ -1,6 +1,6 @@
 ---
 service: serverless-react-boilerplate
-frameworkVersion: "2"
+frameworkVersion: "3"
 useDotenv: true
 variablesResolutionMode: 20210326
 disabledDeprecations:

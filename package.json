@@ -58,7 +58,7 @@
     "null-loader": "^4.0.1",
     "prettier": "^2.2.1",
     "react-refresh": "^0.10.0",
-    "serverless": "^2.22.0",
+    "serverless": "^3.19.0",
     "serverless-offline": "^8.2.0",
     "serverless-plugin-scripts": "^1.0.2",
     "serverless-s3-deploy": "^0.10.0",
