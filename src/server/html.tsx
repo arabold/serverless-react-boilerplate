@@ -10,12 +10,14 @@ const html = ({
   stats,
   content,
   config,
-  css = ''
+  css = '',
+  data = {}
 }: {
   stats: Stats
   content: string
   config: Config
   css?: string
+  data?: object
 }): string => `<!DOCTYPE html>
   <html lang="en">
     <head>
@@ -28,6 +30,7 @@ const html = ({
       ${stats.styles.map(filename => `<link rel="stylesheet" href="${config.app.DIST_URL}/${filename}" />`).join('\n')}
       <style id="jss-server-side">${css}</style>
       <script id="config-server-side">
+        window.__INITIAL_DATA__ = ${JSON.stringify(data)}
         window.__CONFIG__ = ${JSON.stringify(config)};
       </script>
     </head>
