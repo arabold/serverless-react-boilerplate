@@ -59,7 +59,7 @@
     "prettier": "^2.2.1",
     "react-refresh": "^0.10.0",
     "serverless": "^3.14.0",
-    "serverless-offline": "~8.5.0",
+    "serverless-offline": "~8.8.1",
     "serverless-plugin-scripts": "^1.0.2",
     "serverless-s3-deploy": "^0.10.0",
     "serverless-webpack": "^5.3.5",
