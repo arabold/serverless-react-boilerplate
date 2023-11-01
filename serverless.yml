@@ -116,6 +116,14 @@ resources:
       Type: AWS::S3::Bucket
       DeletionPolicy: Delete
       Properties:
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: false
+          RestrictPublicBuckets: false
+        OwnershipControls:
+          Rules:
+            - ObjectOwnership: ObjectWriter
         CorsConfiguration:
           CorsRules:
             - AllowedHeaders:
